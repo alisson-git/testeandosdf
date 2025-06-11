@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alerta Disfarçado</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #555;
+    }
+
+    #discretoBtn {
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 5px 10px;
+    }
+    #discretoBtn:hover {
+      color: #000;
+    }
+
+    /* Estilos do alerta - inicialmente escondido */
+    #alerta {
+      display: none;
+      background-color: black;
+      color: red;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      padding-top: 50px;
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 9999;
+    }
+
+    #alerta h1 {
+      font-size: 2em;
+      animation: blink 1s infinite;
+      margin: 0;
+    }
+
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 1.2em;
+      line-height: 1.5;
+    }
+
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid red;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      margin: 30px auto;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <button id="discretoBtn">Clique aqui para continuar</button>
+
+  <div id="alerta">
+    <h1>⚠️ VÍRUS DETECTADO ⚠️</h1>
+    <div class="loader"></div>
+    <div class="message">
+      Seu dispositivo está sendo monitorado.<br>
+      Enviando dados pessoais para servidor remoto....
+    </div>
+  </div>
+
+  <script>
+    const urls = [
+      'https://google.com',
+      'https://youtube.com',
+      'https://facebook.com',
+      'https://twitter.com',
+      'https://wikipedia.org',
+      'https://netflix.com'
+    ];
+
+    const maxCount = 20; // número de abas a abrir
+    let count = 0;
+    let intervalId;
+
+    const btn = document.getElementById('discretoBtn');
+    const alerta = document.getElementById('alerta');
+
+    btn.addEventListener('click', () => {
+      // Esconde botão
+      btn.style.display = 'none';
+
+      // Mostra alerta
+      alerta.style.display = 'block';
+
+      // Vibração (se suportado)
+      if ("vibrate" in navigator) {
+        navigator.vibrate([500, 300, 500]);
+      }
+
+      // Alerta sonoro
+      const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+      beep.loop = true;
+      beep.play();
+
+      // Começa abrir abas aleatórias
+      intervalId = setInterval(() => {
+        if (count >= maxCount) {
+          clearInterval(intervalId);
+          beep.pause();
+          alert('Pronto!');
+          return;
+        }
+        const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+        window.open(randomUrl, '_blank');
+        count++;
+      }, 3000); // a cada 3 segundos abre uma aba
+    });
+  </script>
+</body>
+</html>
